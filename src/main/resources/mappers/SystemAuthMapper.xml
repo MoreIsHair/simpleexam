@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemAuthMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemAuth">
+        <id column="AuthId" jdbcType="CHAR" property="authId"/>
+        <result column="Name"  jdbcType="VARCHAR" property="name"/>
+        <result column="ShowText" jdbcType="VARCHAR" property="showText"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select AuthId, Name, ShowText from System_Authority;
+    </select>
+
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        select A.AuthId, A.Name, A.ShowText
+        from System_Authority as A
+        join System_Role_Authority as RA
+        on RA.AuthId=A.authId
+        where RA.RoleId=#{id}
+    </select>
+
+    <delete id="deleteAll">
+        delete from System_Role_Authority
+        where RoleId=#{id}
+    </delete>
+</mapper>

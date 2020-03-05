@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbUserAnswerMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbUserAnswer">
+        <result column="OptionId" jdbcType="CHAR" property="optionId"/>
+        <result column="AnswerValue"  jdbcType="CHAR" property="answerValue"/>
+        <result column="UserId"  jdbcType="CHAR" property="userId"/>
+        <result column="UserScore"  jdbcType="FLOAT" property="userScore"/>
+        <result column="QuestionId"  jdbcType="CHAR" property="questionId"/>
+    </resultMap>
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbUserAnswer">
+        insert  into Tb_User_Answers(
+        <if test="optionId !=null">
+            OptionId,
+        </if>
+        <if test="answerValue !=null">
+            AnswerValue,
+        </if>
+        <if test="userId !=null">
+            UserId,
+        </if>
+        <if test="userScore !=null">
+            UserScore,
+        </if>
+        <if test="questionId !=null">
+            QuestionId
+        </if>)
+        values(
+        <if test="optionId !=null">
+            #{optionId},
+        </if>
+        <if test="answerValue !=null">
+            #{answerValue},
+        </if>
+        <if test="userId !=null">
+            #{userId},
+        </if>
+        <if test="userScore !=null">
+            #{userScore},
+        </if>
+        <if test="questionId !=null">
+            #{questionId}
+        </if>)
+    </insert>
+    <select id="findUserScore" resultType="java.lang.Float">
+        select tua.UserScore  from Tb_User_Answers as tua
+        inner join Tb_Questions as tq on tua.QuestionId = tq.questionId
+        inner join Tb_Exams as te on tq.examId = te.ExamId and tq.ExamId = #{examId}
+        where tua.UserId = #{userId} and tua.UserScore  is not null
+    </select>
+
+    <update id="updateBatchByUserIdAndQuestionId"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update Tb_User_Answers
+            <set>
+                UserScore = #{item.userScore}
+            </set>
+            where UserId = #{item.userId} and QuestionId = #{item.questionId}
+        </foreach>
+    </update>
+
+    <select id="findSingleUserScore" resultType="java.lang.Float">
+        select UserScore from Tb_User_Answers where UserId =#{userId} and QuestionId =#{questionId} and UserScore is not null
+    </select>
+
+    <delete id="deleteByUserIdAndQuestionIds">
+        delete from Tb_User_Answers
+        where UserId = #{userId}
+        and QuestionId in(select QuestionId from Tb_Questions where ExamId = #{examId})
+    </delete>
+
+    <insert id="insertBatch">
+        <foreach collection="answers" item="answer" separator=";">
+            insert into Tb_User_Answers (
+            UserId, OptionId, AnswerValue, QuestionId
+            <if test="answer.userScore != null">
+                ,UserScore
+            </if>
+            )
+            values
+            (#{userId}, #{answer.optionId},#{answer.answerValue},#{answer.questionId}
+            <if test="answer.userScore != null">
+                ,#{answer.userScore}
+            </if>)
+        </foreach>
+    </insert>
+</mapper>

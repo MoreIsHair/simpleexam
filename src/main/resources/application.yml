@@ -1,0 +1,74 @@
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tyexamsystem?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 1234
+    #最大活跃数
+    maxActive: 20
+#初始化数量
+    initialSize: 3
+#最大连接等待超时时间
+    maxWait: 60000
+#打开PSCache，并且指定每个连接PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #通过connectionProperties属性来打开mergeSql功能；慢SQL记录
+    #connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 1 from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+# 上传文件总的最大值
+      max-request-size: 20MB
+# 单个文件的最大值
+      max-file-size: 20MB
+      enabled: true
+  profiles:
+    active: dev
+mybatis:
+  mapper-locations: classpath*:mappers/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  pageSizeZero: true
+  params: count=countSql
+#日志输出级别
+logging:
+  level:
+    root: warn
+    cn.tycad.oa.exam: debug
+  file: log/server.log
+
+#是否启用swagger
+swagger:
+    enabled: true
+#二维码的logo路径(不写则二维码就没有logo)
+qrcode:
+    logoPath:
+#二维码跳转的基本路径（basePath/examId）
+    basePath: http://218.107.49.181:8088/oaexam/exam/
+ # token 过期时长/分钟
+jwt:
+  expire: 120
+  secret: 123457
+
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8080

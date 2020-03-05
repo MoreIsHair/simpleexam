@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbInterviewQuestionMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbInterviewQuestion">
+        <id column="InterviewQuestionId" jdbcType="CHAR" property="interviewQuestionId"/>
+        <result column="InterviewQuestionTitle" jdbcType="CHAR" property="interviewQuestionTitle"/>
+        <result column="InterviewQuestionText" jdbcType="CHAR" property="interviewQuestionText"/>
+        <result column="InterviewQuestionScore"  jdbcType="DOUBLE" property="interviewQuestionScore"/>
+        <result column="InterviewQuestionType" jdbcType="INTEGER" property="interviewQuestionType"/>
+        <result column="InterviewQuestionFollow" jdbcType="INTEGER" property="interviewQuestionFollow"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbInterviewQuestion">
+        insert  into tb_interview_question(
+        <if test="interviewQuestionId !=null">
+            InterviewQuestionId,
+        </if>
+        <if test="interviewQuestionTitle !=null">
+            InterviewQuestionTitle,
+        </if>
+        <if test="interviewQuestionText !=null">
+            InterviewQuestionText,
+        </if>
+        <if test="interviewQuestionScore !=null">
+            InterviewQuestionScore,
+        </if>
+        <if test="interviewQuestionType !=null">
+            InterviewQuestionType,
+        </if>
+        <if test="createTime !=null">
+            CreateTime,
+        </if>
+        <if test="interviewQuestionFollow !=null">
+            InterviewQuestionFollow
+        </if>)
+        values(
+        <if test="interviewQuestionId !=null">
+            #{interviewQuestionId},
+        </if>
+        <if test="interviewQuestionTitle !=null">
+            #{interviewQuestionTitle},
+        </if>
+        <if test="interviewQuestionText !=null">
+            #{interviewQuestionText},
+        </if>
+        <if test="interviewQuestionScore !=null">
+            #{interviewQuestionScore},
+        </if>
+        <if test="interviewQuestionType !=null">
+            #{interviewQuestionType},
+        </if>
+        <if test="createTime !=null">
+            #{createTime},
+        </if>
+        <if test="interviewQuestionFollow !=null">
+            #{interviewQuestionFollow}
+        </if>)
+    </insert>
+
+    <select id="findAllByQuestionFollow"  resultMap="BaseResultMap">
+        select * from tb_interview_question where InterviewQuestionFollow =#{follow} order BY CreateTime asc
+    </select>
+</mapper>

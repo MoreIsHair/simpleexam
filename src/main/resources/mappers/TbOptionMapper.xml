@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbOptionMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbOption">
+        <id column="OptionId" jdbcType="CHAR" property="optionId"/>
+        <result column="OptionText"  jdbcType="CHAR" property="optionText"/>
+        <result column="QuestionId"  jdbcType="CHAR" property="questionId"/>
+        <result column="OrderNum"  jdbcType="INTEGER" property="orderNum"/>
+    </resultMap>
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbOption">
+        insert  into Tb_Option(
+        <if test="optionId !=null">
+            OptionId,
+        </if>
+        <if test="optionText !=null">
+            OptionText,
+        </if>
+        <if test="orderNum !=null">
+            OrderNum,
+        </if>
+        <if test="questionId !=null">
+            QuestionId
+        </if>)
+        values(
+        <if test="optionId !=null">
+            #{optionId},
+        </if>
+        <if test="optionText !=null">
+            #{optionText},
+        </if>
+        <if test="orderNum !=null">
+            #{orderNum},
+        </if>
+        <if test="questionId !=null">
+            #{questionId}
+        </if>)
+    </insert>
+
+    <select id="findByUserIdAndQuestionId" resultMap="BaseResultMap">
+        select t.* from Tb_User_Answers as tua inner join Tb_Option as t
+        on tua.OptionId = t.OptionId
+        where tua.UserId = #{userId} and tua.QuestionId  =#{questionId}
+        order by t.OrderNum
+    </select>
+    <delete id="deleteByQuestionId">
+        delete from Tb_Option where QuestionId = #{questionId}
+    </delete>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbValidAnswerMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbValidAnswer">
+        <result column="OptionId" jdbcType="CHAR" property="optionId"/>
+        <result column="AnswerValue"  jdbcType="CHAR" property="answerValue"/>
+        <result column="QuestionId"  jdbcType="CHAR" property="questionId"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbValidAnswer">
+        insert  into Tb_Valid_Answers(
+        <if test="optionId !=null">
+            OptionId,
+        </if>
+        <if test="answerValue !=null">
+            AnswerValue,
+        </if>
+        <if test="questionId !=null">
+            QuestionId
+        </if>)
+        values(
+        <if test="optionId !=null">
+            #{optionId},
+        </if>
+        <if test="answerValue !=null">
+            #{answerValue},
+        </if>
+        <if test="questionId !=null">
+            #{questionId}
+        </if>)
+    </insert>
+    <select id="findByQuestionId" resultMap="BaseResultMap">
+        select * from Tb_Valid_Answers where QuestionId =#{questionId}
+    </select>
+    <delete id="deleteByQuestionId">
+        delete from Tb_Valid_Answers where QuestionId = #{questionId}
+    </delete>
+</mapper>

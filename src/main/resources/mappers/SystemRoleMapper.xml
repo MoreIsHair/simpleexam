@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemRoleMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemRole">
+        <id column="RoleId" jdbcType="CHAR" property="roleId"/>
+        <result column="roleName"  jdbcType="CHAR" property="roleName"/>
+        <result column="Description" jdbcType="VARCHAR" property="description"/>
+        <result column="roleType" jdbcType="INTEGER" property="roleType"/>
+    </resultMap>
+    
+    <resultMap id="UserRoleMap" type="cn.tycad.oa.exam.model.bo.UserRoleBo">
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <collection property="roles" ofType="cn.tycad.oa.exam.model.entity.SystemRole">
+            <id column="RoleId" jdbcType="CHAR" property="roleId"/>
+            <result column="roleName"  jdbcType="CHAR" property="roleName"/>
+            <result column="Description" jdbcType="VARCHAR" property="description"/>
+            <result column="roleType" jdbcType="INTEGER" property="roleType"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.SystemRole">
+        insert  into System_Roles(
+        <if test="roleId !=null">
+            RoleId,
+        </if>
+        <if test="description !=null">
+            Description,
+        </if>
+        <if test="roleName !=null">
+            RoleName,
+        </if>
+            RoleType)
+        values(
+        <if test="roleId !=null">
+            #{roleId},
+        </if>
+        <if test="description !=null">
+            #{description},
+        </if>
+        <if test="roleName !=null">
+            #{roleName},
+        </if>
+          #{roleType}
+        )
+    </insert>
+
+    <select id="selectList" resultType="cn.tycad.oa.exam.model.entity.SystemRole">
+        select * from System_Roles
+    </select>
+
+    <select id="list" resultType="cn.tycad.oa.exam.model.entity.SystemRole">
+        select * from System_Roles
+    </select>
+
+    <select id="getOne" resultType="cn.tycad.oa.exam.model.entity.SystemRole">
+        select RoleId,
+               RoleName,
+               Description,
+               RoleType
+        from   System_Roles
+        where  RoleId=#{id}
+    </select>
+
+    <select id="getByName" resultType="cn.tycad.oa.exam.model.entity.SystemRole">
+        select RoleId,
+               RoleName,
+               Description
+        from   System_Roles
+        where  RoleName=#{roleName}
+        and    RoleId <![CDATA[ <> ]]> #{roleId}
+    </select>
+    
+    <select id="getByUserIds" resultMap="UserRoleMap">
+
+        SELECT B.UserId, D.*
+        FROM  System_User_Role AS B
+        INNER JOIN System_Roles AS D
+        ON D.RoleId=B.RoleId and B.UserId in
+        <foreach collection="userIds" open="(" close=")" separator="," item="userId">
+            #{userId}
+        </foreach>
+    </select>
+
+    <select id="getByUserId" resultMap="UserRoleMap">
+        SELECT A.UserId, B.*
+        FROM System_User_Role AS A
+        LEFT JOIN System_Roles AS B
+        ON B.RoleId=A.RoleId
+        WHERE A.UserId=#{userId}
+    </select>
+
+    <delete id="deleteByRoleId">
+      delete from System_Roles where RoleId = #{value}
+    </delete>
+
+    <update id="update" parameterType="cn.tycad.oa.exam.model.entity.SystemRole">
+        update System_Roles
+        set RoleName=#{roleName}, Description=#{description}
+        where RoleId=#{roleId}
+    </update>
+
+    <update id="updateUserRole" parameterType="cn.tycad.oa.exam.model.param.UserRoleParam">
+        DELETE FROM System_User_Role WHERE UserId= #{userId};
+
+        <foreach item="id" collection="roleIds" separator=";">
+        INSERT INTO System_User_Role(UserId, RoleId)
+        VALUES(#{userId},#{id})
+        </foreach>
+
+        ;UPDATE System_Users SET LastEditTime = now() WHERE UserId=#{userId};
+    </update>
+    <delete id="deleteAllRoleInfo">
+        truncate table System_Roles ;
+        truncate table System_Role_Authority;
+        truncate table System_Authority;
+    </delete>
+</mapper>

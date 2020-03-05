@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemGroupMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemGroup">
+        <id column="GroupId" jdbcType="CHAR" property="groupId"></id>
+        <result column="GroupName" jdbcType="CHAR" property="groupName"></result>
+        <result column="DepartmentId" jdbcType="CHAR" property="departmentId"></result>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO System_Group
+        (
+          <if test="groupId != null">
+              GroupId
+          </if>
+          <if test="groupName != null">
+              , GroupName
+          </if>
+          <if test="departmentId != null">
+              , departmentId
+          </if>
+        )
+        VALUES
+        ( NULL, -- GroupId - uniqueidentifier
+          N'', -- GroupName - varchar(50)
+          NULL  -- DepartmentId - uniqueidentifier
+        )
+    </insert>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT GroupId
+             , GroupName
+             , DepartmentId
+        FROM   System_Group
+    </select>
+
+    <select id="getUsersByGroupId" resultType="cn.tycad.oa.exam.model.entity.SystemUser">
+      SELECT UserId
+          , Username
+          , Name
+          , DeptId
+          , Password
+          , Description
+          , CreateTime
+          , LastEditTime
+          , Gender
+          , ProfilePicture
+          , Birthday
+          , RoleId
+          , GroupId
+      FROM  System_Users
+      WHERE GroupId=#{groupId}
+    </select>
+</mapper>

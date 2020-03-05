@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbReviewMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbReview">
+        <id column="ReviewId" jdbcType="CHAR" property="reviewId"></id>
+        <result column="WellPrepared" jdbcType="CHAR" property="wellPrepared"></result>
+        <result column="UserId" jdbcType="CHAR" property="userId"></result>
+        <result column="ExamId" jdbcType="CHAR" property="examId"></result>
+        <result column="DisposableUsername" jdbcType="CHAR" property="disposableUsername"></result>
+        <result column="Pronunciation" jdbcType="CHAR" property="pronunciation"></result>
+        <result column="Experience" jdbcType="CHAR" property="experience"></result>
+        <result column="Logic" jdbcType="CHAR" property="logic"></result>
+        <result column="Understandable" jdbcType="CHAR" property="understandable"></result>
+        <result column="HandoutQuality" jdbcType="CHAR" property="handoutQuality"></result>
+        <result column="Interaction" jdbcType="CHAR" property="interaction"></result>
+        <result column="AnswerOnQuestion" jdbcType="CHAR" property="answerOnQuestion"></result>
+        <result column="Helpful" jdbcType="CHAR" property="helpful"></result>
+        <result column="Sensible" jdbcType="CHAR" property="sensible"></result>
+        <result column="TotalScore" jdbcType="CHAR" property="totalScore"></result>
+        <result column="Suggestion" jdbcType="CHAR" property="suggestion"></result>
+    </resultMap>
+    <resultMap id="BaseResultAndTeacherMap" type="cn.tycad.oa.exam.model.bo.TbReviewAndExamBo">
+        <id column="ReviewId" jdbcType="CHAR" property="reviewId"></id>
+        <result column="WellPrepared" jdbcType="CHAR" property="wellPrepared"></result>
+        <result column="Pronunciation" jdbcType="CHAR" property="pronunciation"></result>
+        <result column="Experience" jdbcType="CHAR" property="experience"></result>
+        <result column="Logic" jdbcType="CHAR" property="logic"></result>
+        <result column="Understandable" jdbcType="CHAR" property="understandable"></result>
+        <result column="HandoutQuality" jdbcType="CHAR" property="handoutQuality"></result>
+        <result column="Interaction" jdbcType="CHAR" property="interaction"></result>
+        <result column="ExamId" jdbcType="CHAR" property="examId"></result>
+        <result column="ExamName" jdbcType="CHAR" property="examName"></result>
+        <result column="PublishTime" jdbcType="TIMESTAMP" property="publishTime"></result>
+        <result column="TeacherUserName" jdbcType="CHAR" property="teacherName"></result>
+        <result column="AnswerOnQuestion" jdbcType="CHAR" property="answerOnQuestion"></result>
+        <result column="Helpful" jdbcType="CHAR" property="helpful"></result>
+        <result column="Sensible" jdbcType="CHAR" property="sensible"></result>
+        <result column="TotalScore" jdbcType="CHAR" property="totalScore"></result>
+        <result column="Suggestion" jdbcType="CHAR" property="suggestion"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbReview">
+        INSERT INTO Tb_Reviews
+        (
+          <if test="reviewId != null">
+              ReviewId
+          </if>
+          <if test="userId != null">
+              , UserId
+          </if>
+          <if test="examId != null">
+              , ExamId
+          </if>
+          <if test="disposableUsername != null">
+              , DisposableUsername
+          </if>
+          <if test="wellPrepared != null">
+              , WellPrepared
+          </if>
+          <if test="pronunciation != null">
+              , Pronunciation
+          </if>
+          <if test="experience != null">
+              , Experience
+          </if>
+          <if test="logic != null">
+              , Logic
+          </if>
+          <if test="understandable != null">
+              , Understandable
+          </if>
+          <if test="handoutQuality != null">
+              , HandoutQuality
+          </if>
+          <if test="interaction != null">
+              , Interaction
+          </if>
+          <if test="answerOnQuestion != null">
+              , AnswerOnQuestion
+          </if>
+          <if test="helpful != null">
+              , Helpful
+          </if>
+          <if test="sensible != null">
+              , Sensible
+          </if>
+          <if test="suggestion != null">
+              , Suggestion
+          </if>
+          <if test="totalScore != null">
+              , TotalScore
+          </if>
+        )
+        VALUES
+        (
+            <if test="reviewId != null">
+                #{reviewId}
+            </if>
+            <if test="userId != null">
+                , #{userId}
+            </if>
+            <if test="examId != null">
+                , #{examId}
+            </if>
+            <if test="disposableUsername != null">
+                , #{disposableUsername}
+            </if>
+            <if test="wellPrepared != null">
+                , #{wellPrepared}
+            </if>
+            <if test="pronunciation != null">
+                , #{pronunciation}
+            </if>
+            <if test="experience != null">
+                , #{experience}
+            </if>
+            <if test="logic != null">
+                , #{logic}
+            </if>
+            <if test="understandable != null">
+                , #{understandable}
+            </if>
+            <if test="handoutQuality != null">
+                , #{handoutQuality}
+            </if>
+            <if test="interaction != null">
+                , #{interaction}
+            </if>
+            <if test="answerOnQuestion != null">
+                , #{answerOnQuestion}
+            </if>
+            <if test="helpful != null">
+                , #{helpful}
+            </if>
+            <if test="sensible != null">
+                , #{sensible}
+            </if>
+            <if test="suggestion != null">
+                , #{suggestion}
+            </if>
+            <if test="totalScore != null">
+                , #{totalScore}
+            </if>
+        )
+    </insert>
+
+    <select id="getList" resultMap="BaseResultMap">
+      SELECT ReviewId
+           , UserId
+           , ExamId
+           , WellPrepared
+           , Pronunciation
+           , Experience
+           , Logic
+           , Understandable
+           , HandoutQuality
+           , Interaction
+           , AnswerOnQuestion
+           , Helpful
+           , Sensible
+           , TotalScore
+           , Suggestion
+      FROM Tb_Reviews
+    </select>
+
+    <select id="getListByExamId" resultMap="BaseResultMap">
+        SELECT ReviewId
+           , UserId
+           , ExamId
+           , WellPrepared
+           , Pronunciation
+           , Experience
+           , Logic
+           , Understandable
+           , HandoutQuality
+           , Interaction
+           , AnswerOnQuestion
+           , Helpful
+           , Sensible
+           , TotalScore
+           , Suggestion
+      FROM Tb_Reviews
+      WHERE ExamId=#{examId} AND UserId=#{userId}
+    </select>
+
+    <select id="getCountByExamIdAndUserId" resultType="INTEGER">
+      SELECT COUNT(1)
+      FROM Tb_Reviews
+      <where>
+          ExamId=#{examId}
+          <if test="userId != null and userId != ''">
+              and UserId = #{userId}
+          </if>
+          <if test="disposableUsername != null and disposableUsername != ''">
+              and DisposableUsername = #{disposableUsername}
+          </if>
+      </where>
+    </select>
+
+    <select id="getAllExamListByExamIdSort" resultMap="BaseResultAndTeacherMap">
+        select tr.*,te.TeacherUserName,te.ExamName,te.PublishTime
+        from Tb_Reviews as tr inner join  Tb_Exams as  te on tr.ExamId = te.ExamId
+        <where>
+            <if test="minTime != null">
+               and te.PublishTime <![CDATA[>]]> #{minTime}
+            </if>
+            <if test="maxTime != null">
+               and te.PublishTime <![CDATA[<]]> #{maxTime}
+            </if>
+        and tr.TotalScore IS NOT NULL
+    </where>
+    </select>
+</mapper>

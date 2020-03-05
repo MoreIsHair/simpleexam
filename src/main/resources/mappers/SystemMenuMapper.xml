@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemMenuMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemMenu">
+        <id column="MenuId" jdbcType="CHAR" property="menuId"/>
+        <result column="MenuName"  jdbcType="VARCHAR" property="menuName"/>
+        <result column="ParentMenuId" jdbcType="VARCHAR" property="parentMenuId"/>
+        <result column="SortOrder" jdbcType="INTEGER" property="sortOrder"/>
+        <result column="Path" jdbcType="CHAR" property="path"></result>
+    </resultMap>
+
+    <insert id="insert">
+        insert into System_Menu(
+          <if test="menuId != null">
+              MenuId
+          </if>,
+          <if test="menuName != null">
+              MenuName,
+          </if>
+          <if test="parentMenuId != null">
+              ParentMenuId,
+          </if>
+          <if test="sortOrder != null">
+              SortOrder
+          </if>
+        ) values (
+            <if test="menuId != null">
+                #{menuId}
+            </if>,
+            <if test="menuName != null">
+                #{menuName},
+            </if>
+            <if test="parentMenuId != null">
+                #{parentMenuId},
+            </if>
+            (SELECT CASE WHEN MAX(SortOrder) IS NULL
+            THEN 1
+            ELSE MAX(SortOrder)+ 1
+            END
+            FROM System_Menu
+            WHERE ParentMenuId = #{parentMenuId})
+        )
+    </insert>
+
+    <select id="getByParentIdAndName" resultType="INTEGER">
+        select count(1)
+        from System_Menu
+        where ParentMenuId = #{parentMenuId}
+        and MenuName = #{menuName}
+    </select>
+
+    <select id="getByRole" resultMap="BaseResultMap">
+        SELECT a.MenuId
+             , a.MenuName
+             , a.ParentMenuId
+             , a.SortOrder
+             , a.Path
+        FROM System_Menu AS a
+        INNER JOIN System_Role_Menu AS b
+        ON b.MenuId=a.MenuId
+        WHERE b.RoleId IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        '${item}'
+        </foreach>
+    </select>
+</mapper>

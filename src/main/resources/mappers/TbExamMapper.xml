@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbExamMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbExam">
+        <id column="ExamId" jdbcType="CHAR" property="examId"/>
+        <result column="ExamName"  jdbcType="CHAR" property="examName"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="PublishTime" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="SubTitle" jdbcType="CHAR" property="subTitle"/>
+        <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="DeadLine" jdbcType="TIMESTAMP" property="deadLine"/>
+        <result column="Duration"  jdbcType="INTEGER" property="duration"/>
+        <result column="ExamType"  jdbcType="INTEGER" property="examType"/>
+        <result column="LastEditor" jdbcType="CHAR" property="lastEditor"/>
+        <result column="Creator" jdbcType="CHAR" property="creator"/>
+        <result column="TeacherUserName" jdbcType="CHAR" property="teacherUserName"/>
+    </resultMap>
+    <resultMap id="ExamAndUserScoreMap" type="cn.tycad.oa.exam.model.bo.SingleExamAndScoreBo">
+            <result column="ExamId" jdbcType="CHAR" property="examId"/>
+            <result column="ExamName"  jdbcType="CHAR" property="examName"/>
+            <result column="Description" jdbcType="CHAR" property="description"/>
+            <result column="PublishTime" jdbcType="TIMESTAMP" property="publishTime"/>
+            <result column="SubTitle" jdbcType="CHAR" property="subTitle"/>
+            <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+            <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="DeadLine" jdbcType="TIMESTAMP" property="deadLine"/>
+            <result column="Duration"  jdbcType="INTEGER" property="duration"/>
+            <result column="ExamType"  jdbcType="INTEGER" property="examType"/>
+            <result column="LastEditor" jdbcType="CHAR" property="lastEditor"/>
+            <result column="Creator" jdbcType="CHAR" property="creator"/>
+            <result column="TeacherUserName" jdbcType="CHAR" property="teacherUserName"/>
+            <result column="Score" jdbcType="FLOAT" property="score"/>
+            <result column="Surplus" jdbcType="DOUBLE" property="surplus"/>
+            <result column="SuspendTime" jdbcType="TIMESTAMP" property="suspendTime"/>
+            <result column="Reviewed" jdbcType="BIT" property="reviewed"></result>
+            <result column="UserId" jdbcType="BIT" property="userId"></result>
+            <result column="Username" jdbcType="BIT" property="username"></result>
+            <result column="Name" jdbcType="BIT" property="name"></result>
+    </resultMap>
+
+    <resultMap id="ExamAndAverageMap" type="cn.tycad.oa.exam.model.bo.TbExamAndAverageBo">
+        <id column="ExamId" jdbcType="CHAR" property="examId"/>
+        <result column="ExamName"  jdbcType="CHAR" property="examName"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="PublishTime" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="SubTitle" jdbcType="CHAR" property="subTitle"/>
+        <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="DeadLine" jdbcType="TIMESTAMP" property="deadLine"/>
+        <result column="Duration"  jdbcType="INTEGER" property="duration"/>
+        <result column="LastEditor" jdbcType="CHAR" property="lastEditor"/>
+        <result column="Creator" jdbcType="CHAR" property="creator"/>
+        <result column="TeacherUserName" jdbcType="CHAR" property="teacherUserName"/>
+        <result column="Average" jdbcType="FLOAT" property="average"/>
+    </resultMap>
+
+    <resultMap id="ExamInfoAndUserAndDepartmentAndScoreMap" type="cn.tycad.oa.exam.model.bo.TbExamAndUserInfoAndDepartInfoBo">
+        <id column="ExamId" jdbcType="CHAR" property="examId"/>
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="DepartmentId" jdbcType="CHAR" property="departmentId"/>
+        <result column="UserName" jdbcType="CHAR" property="userName"/>
+        <result column="ExamName" jdbcType="CHAR" property="examName"/>
+        <result column="FinishExamTime" jdbcType="TIMESTAMP" property="finishExamTime"/>
+        <result column="StartExamTime" jdbcType="TIMESTAMP" property="startExamTime"/>
+        <result column="DepartmentName" jdbcType="CHAR" property="departmentName"/>
+        <result column="CompanyName" jdbcType="CHAR" property="companyName"/>
+        <result column="Score" jdbcType="FLOAT" property="score"/>
+    </resultMap>
+
+    <resultMap id="ExamAllUserInfoAndScoreMap" type="cn.tycad.oa.exam.model.bo.SingleExamAndScoreAndUserInfo">
+        <id column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="Score"  jdbcType="FLOAT" property="score"/>
+        <result column="FinishExamTime" jdbcType="TIMESTAMP" property="finishExamTime"/>
+        <result column="StartExamTime" jdbcType="TIMESTAMP" property="startExamTime"/>
+        <result column="DepartmentId" jdbcType="CHAR" property="departmentId"/>
+        <result column="UserName" jdbcType="CHAR" property="userName"/>
+        <result column="ExamName" jdbcType="CHAR" property="examName"/>
+        <result column="DepartmentName" jdbcType="CHAR" property="departmentName"/>
+        <result column="TeacherUserName" jdbcType="CHAR" property="teacherUserName"/>
+    </resultMap>
+
+    <resultMap id="FindFutureMarkPapersExamMap" type="cn.tycad.oa.exam.model.bo.TbExamAndUserInfoBo">
+        <id column="ExamId" jdbcType="CHAR" property="examId"/>
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="ExamName"  jdbcType="CHAR" property="examName"/>
+        <result column="UserName"  jdbcType="CHAR" property="userName"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="PublishTime" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="SubTitle" jdbcType="CHAR" property="subTitle"/>
+        <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="DeadLine" jdbcType="TIMESTAMP" property="deadLine"/>
+        <result column="Duration"  jdbcType="INTEGER" property="duration"/>
+        <result column="LastEditor" jdbcType="CHAR" property="lastEditor"/>
+        <result column="Creator" jdbcType="CHAR" property="creator"/>
+        <result column="TeacherUserName" jdbcType="CHAR" property="teacherUserName"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbExam">
+        insert  into Tb_Exams(
+        <if test="examId !=null">
+            ExamId,
+        </if>
+        <if test="description !=null">
+            Description,
+        </if>
+        <if test="publishTime !=null">
+            PublishTime,
+        </if>
+        <if test="subTitle !=null">
+            Subtitle,
+        </if>
+        <if test="lastEditTime !=null">
+            LastEditTime,
+        </if>
+        <if test="createTime !=null" >
+            CreateTime,
+        </if>
+        <if test="deadLine !=null">
+            DeadLine,
+        </if>
+        <if test="duration !=null">
+            Duration,
+        </if>
+        <if test="examType !=null">
+            ExamType,
+        </if>
+        <if test="lastEditor !=null">
+            LastEditor,
+        </if>
+        <if test="creator !=null">
+            Creator,
+        </if>
+        <if test="teacherUserName !=null">
+            TeacherUserName,
+        </if>
+        <if test="examName !=null">
+            ExamName
+        </if>)
+        values(
+        <if test="examId !=null">
+            #{examId},
+        </if>
+        <if test="description !=null">
+            #{description},
+        </if>
+        <if test="publishTime !=null">
+            #{publishTime},
+        </if>
+        <if test="subTitle !=null">
+            #{subTitle},
+        </if>
+        <if test="lastEditTime !=null">
+            #{lastEditTime},
+        </if>
+        <if test="createTime !=null">
+            #{createTime},
+        </if>
+        <if test="deadLine !=null">
+            #{deadLine},
+        </if>
+        <if test="duration !=null">
+            #{duration},
+        </if>
+        <if test="examType !=null">
+            #{examType},
+        </if>
+        <if test="lastEditor !=null">
+            #{lastEditor},
+        </if>
+        <if test="creator !=null">
+            #{creator},
+        </if>
+        <if test="teacherUserName !=null">
+            #{teacherUserName},
+        </if>
+        <if test="examName !=null">
+            #{examName}
+        </if>)
+    </insert>
+
+    <select id="selectByExamId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from Tb_Exams where ExamId = #{value}
+    </select>
+    <delete id="deleteByExamId" parameterType="java.lang.String">
+        delete from Tb_Exams where ExamId = #{value}
+    </delete>
+
+    <update id="updateByExam" parameterType="cn.tycad.oa.exam.model.entity.TbExam">
+        update Tb_Exams
+        <set>
+            Description = #{description},
+            <if test="publishTime !=null">PublishTime = #{publishTime},</if>
+            SubTitle = #{subTitle},
+            <if test="lastEditTime !=null">LastEditTime = #{lastEditTime},</if>
+            <if test="description !=null">Description = #{description},</if>
+            <if test="createTime !=null">CreateTime = #{createTime},</if>
+            <if test="deadLine !=null">DeadLine = #{deadLine},</if>
+            <if test="duration !=null and '0'.toString() != duration">Duration = #{duration},</if>
+            <if test="lastEditor !=null and lastEditor!=''">LastEditor = #{lastEditor},</if>
+            <if test="creator !=null and creator !=''">Creator = #{creator},</if>
+            <if test="examName !=null and examName !=''">ExamName = #{examName},</if>
+            <if test="teacherUserName !=null and teacherUserName !=''">TeacherUserName = #{teacherUserName}</if>
+        </set>
+        where ExamId = #{examId}
+    </update>
+    <select id="findAllFilterExamName" resultType="cn.tycad.oa.exam.model.bo.TbExamPagerBo">
+        select TE.*, SU.Name AS teacherName
+        from Tb_Exams AS TE
+        LEFT JOIN System_Users AS SU
+        on su.UserName=TE.TeacherUserName
+        <if test="examName != null and examName != ''">
+            where ExamName like '%${examName}%'
+        </if>
+        order by TE.LastEditTime DESC
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from Tb_Exams order by LastEditTime DESC
+    </select>
+    <select id="findExamAndUserScore" resultMap="ExamAndUserScoreMap">
+        select te.*
+             , tue.Score
+             , (case when tr.ReviewId is null then 0 else 1 end) as Reviewed
+        from Tb_Exams as te
+        inner join Tb_User_Exams as tue
+        on te.ExamId = tue.ExamId
+        left join Tb_Reviews as tr
+        on tr.ExamId = te.ExamId
+          and tr.UserId = tue.UserId
+        where tue.UserId =#{userId}
+        and tue.examStatus = #{examStatus}
+        order by te.LastEditTime DESC
+    </select>
+
+    <select id="findFilterExamAndUserScore" resultMap="ExamAndUserScoreMap">
+        select te.ExamId
+             , te.ExamName
+             , te.SubTitle
+             , te.Description
+             , te.CreateTime
+             , te.Creator
+             , te.LastEditTime
+             , te.LastEditor
+             , te.Duration
+             , te.DeadLine
+             , te.TeacherUserName
+             , tue.Score
+             , tue.StartExamTime as PublishTime
+             , tue.SuspendTime
+             , tue.Surplus
+             , (case when tr.ReviewId is null then 0 else 1 end) as Reviewed
+             , su.UserId
+             , su.Name Username
+        from Tb_Exams as te
+        inner join Tb_User_Exams as tue
+        on te.ExamId = tue.ExamId
+        inner join System_Users AS su
+        on su.UserId=tue.UserId
+        left join Tb_Reviews as tr
+        on tr.ExamId = te.ExamId
+          and tr.UserId = tue.UserId
+        <where>
+            <if test="examStatus == 0">
+                #{nowDate} <![CDATA[ >= ]]> te.PublishTime and
+                #{nowDate} <![CDATA[ <= ]]> te.DeadLine and
+            </if>
+            <if test="term.minTime != null">
+                tue.FinishExamTime <![CDATA[ >= ]]> #{term.minTime} and
+            </if>
+            <if test="term.maxTime != null">
+                tue.FinishExamTime <![CDATA[ <= ]]> #{term.maxTime} and
+            </if>
+            <if test="term.examName != null and term.examName != ''">
+                te.ExamName like '%${term.examName}%' and
+            </if>
+            <if test="term.creator != null and term.creator != ''">
+                te.Creator = #{term.creator} and
+            </if>
+            <if test="term.username != null and term.username != ''">
+                su.Name like '%${term.username}%' and
+            </if>
+            <if test="term.userId != null and term.userId != ''">
+                su.UserId = #{term.userId} and
+                tue.UserId =#{term.userId} and
+            </if>
+            tue.examStatus = #{examStatus}
+        </where>
+        order by te.LastEditTime DESC
+    </select>
+
+    <select id="findIsHasFutureExam" resultType="cn.tycad.oa.exam.model.entity.TbUserExam">
+        select *
+        from  Tb_User_Exams
+        where ExamId = #{examId} and UserId =#{userId} and ExamStatus =0
+    </select>
+
+    <select id="findExamAndAverage" resultMap="ExamAndAverageMap">
+        SELECT
+        	te.ExamId,
+        	te.ExamName,
+        	te.Duration,
+            te.PublishTime,
+            TRUNCATE(AVG(case when tue.Score is null then 0 else tue.score end),2) Average
+        FROM
+        	Tb_Exams AS te
+        	INNER JOIN Tb_User_Exams AS tue ON te.ExamId = tue.ExamId
+        WHERE
+        <if test="examName != null and examName !=''">
+            te.ExamName like '%${examName}%' and
+        </if>
+        tue.Score is not null
+        GROUP BY
+        	te.ExamId,
+        	te.ExamName,
+        	te.Duration,
+        	te.PublishTime
+        ORDER BY
+	        te.PublishTime DESC
+    </select>
+
+    <select id="findAllExamInfoAndUserAndDepartmentAndScore" resultMap="ExamInfoAndUserAndDepartmentAndScoreMap">
+        SELECT
+            te.ExamId,
+            te.ExamName,
+            sd.DeptId as DepartmentId,
+            sd.DeptName as DepartmentName,
+            su.UserId,
+            su.CompanyName,
+            su.Name as UserName,
+            tue.Score,
+            tue.FinishExamTime
+        FROM
+            Tb_Exams AS te
+            INNER JOIN Tb_User_Exams AS tue ON te.ExamId = tue.ExamId
+            <if test="examName != null and examName !=''">
+            and te.ExamName like '%${examName}%'
+            </if>
+            <if test="min != null and max !=null">
+                and  (case when tue.FinishExamTime is null then te.DeadLine else tue.tue.FinishExamTime end ) <![CDATA[<]]> #{max} and tue.FinishExamTime <![CDATA[>]]> #{min}
+            </if>
+            INNER JOIN System_Users AS su ON tue.UserId = su.UserId
+            <if test="userName != null and userName != ''">
+                and su.Name like '%${userName}%'
+            </if>
+            <if test="companyName !=null and companyName !=''">
+                and su.companyName like '%${companyName}%'
+            </if>
+            INNER JOIN System_Departments AS sd ON su.DeptId = sd.DeptId
+            <if test="departmentIds !=null ">
+            and sd.DeptId in
+                <foreach collection="departmentIds" item="departmentId" separator="," open="(" close=")">
+                    #{departmentId}
+                </foreach>
+            </if>
+        WHERE
+            tue.Score IS NOT NULL
+        ORDER BY
+            tue.UserId ASC,
+            tue.FinishExamTime DESC
+    </select>
+
+    <select id="getExamAllUserInfoAndScore" resultMap="ExamAllUserInfoAndScoreMap">
+        SELECT
+            tue.*,
+            te.ExamName,
+            te.TeacherUserName,
+            sd.DeptId as DepartmentId,
+            sd.DeptName as DepartmentName,
+            su.Name as UserName
+        FROM
+            Tb_Exams AS te
+            INNER JOIN Tb_User_Exams AS tue ON te.ExamId  = tue.ExamId
+            INNER JOIN System_Users AS su ON tue.UserId = su.UserId
+            INNER JOIN System_Departments AS sd ON su.DeptId = sd.DeptId
+        WHERE
+            tue.ExamId = #{examId} and tue.Score IS NOT NULL
+        ORDER BY
+            tue.UserId DESC
+    </select>
+
+    <select id="getExamUsers" resultType="cn.tycad.oa.exam.model.bo.ExamUserBo">
+        CREATE TEMPORARY TABLE IF NOT EXISTS TMP_EXAM_USER (
+            UserId varchar(100),
+            Username varchar(30),
+            Name varchar(20),
+            DeptId varchar(100),
+            Password varchar(100),
+            Description varchar(255),
+            CreateTime Datetime,
+            LastEditTime Datetime,
+            Gender varchar(4),
+            ProfilePicture varchar(255),
+            Birthday Datetime,
+            Type int(2),
+            RoleId varchar(100),
+            GroupId varchar(100),
+            Tel VARCHAR(20),
+            BelongTo bit
+        );
+
+        INSERT INTO TMP_EXAM_USER
+        SELECT
+			A.UserId,
+            A.Username,
+            A.Name,
+            A.DeptId,
+            A.Password,
+            A.Description,
+            A.CreateTime,
+            A.LastEditTime,
+            A.Gender,
+            A.ProfilePicture,
+            A.Birthday,
+            A.Type,
+            A.RoleId,
+            A.GroupId,
+            A.Tel ,
+			1 AS BelongTo
+        FROM System_Users AS A
+        LEFT JOIN Tb_User_Exams AS B
+        ON B.UserId=A.UserId
+        LEFT JOIN System_User_Role AS C
+        ON C.UserId=A.UserId
+        LEFT JOIN System_Roles AS D
+        ON D.RoleId=C.RoleId
+        WHERE B.ExamId=#{examId}
+        AND D.RoleType=0;
+
+        CREATE TEMPORARY TABLE IF NOT EXISTS TMP_EXAM_USER_NEW SELECT * FROM TMP_EXAM_USER;
+
+        SELECT * FROM TMP_EXAM_USER
+        UNION ALL
+        SELECT
+            A.UserId,
+            A.Username,
+            A.Name,
+            A.DeptId,
+            A.Password,
+            A.Description,
+            A.CreateTime,
+            A.LastEditTime,
+            A.Gender,
+            A.ProfilePicture,
+            A.Birthday,
+            A.Type,
+            A.RoleId,
+            A.GroupId,
+            A.Tel,
+            0 AS BelongTo
+        FROM System_Users AS A
+        LEFT JOIN System_User_Role AS C
+        ON C.UserId=A.UserId
+        LEFT JOIN System_Roles AS D
+        ON D.RoleId=C.RoleId
+        WHERE NOT EXISTS (SELECT 1 FROM TMP_EXAM_USER_NEW WHERE UserId=A.UserId)
+        AND D.RoleType=0 ;
+
+        DROP TEMPORARY TABLE IF EXISTS TMP_EXAM_USER;
+        DROP TEMPORARY TABLE IF EXISTS TMP_EXAM_USER_NEW;
+    </select>
+
+    <select id="findFutureMarkPapersExam" resultMap="FindFutureMarkPapersExamMap">
+       SELECT
+        te.ExamId,
+        te.ExamName,
+        te.Description,
+        te.SubTitle,
+        te.LastEditTime,
+        te.CreateTime,
+        te.DeadLine,
+        TIMESTAMPDIFF(MINUTE, tue.StartExamTime, tue.FinishExamTime) as Duration,
+        te.LastEditor,
+        te.Creator,
+        te.TeacherUserName ,
+        su.UserId,
+        su.Name AS UserName,
+        tue.FinishExamTime AS PublishTime
+        FROM
+            Tb_Exams AS te
+            INNER JOIN Tb_User_Exams AS tue ON te.ExamId = tue.ExamId and te.TeacherUserName = #{teacher}
+            <if test="examName !=null and examName != ''">
+                and te.ExamName like '%${examName}%'
+            </if>
+            and tue.FinishExamTime is not null and tue.Score is null
+            INNER JOIN System_Users AS su ON tue.UserId = su.UserId
+            <if test="userName !=null and userName != ''">
+                and su.Name like '%${userName}%'
+            </if>
+        order by te.PublishTime desc ,tue.FinishExamTime DESC
+    </select>
+
+    <select id="findExamByIdAndType" resultType="java.lang.Integer">
+        select count(*) from tb_exams where ExamId = #{examId} and ExamType =#{examType}
+    </select>
+</mapper>

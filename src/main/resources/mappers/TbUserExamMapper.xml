@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbUserExamMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbUserExam">
+        <result column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="Score"  jdbcType="FLOAT" property="score"/>
+        <result column="Surplus"  jdbcType="DOUBLE" property="surplus"/>
+        <result column="FinishExamTime" jdbcType="TIMESTAMP" property="finishExamTime"/>
+        <result column="StartExamTime" jdbcType="TIMESTAMP" property="startExamTime"/>
+        <result column="MarkTime" jdbcType="TIMESTAMP" property="markTime"/>
+        <result column="SuspendTime" jdbcType="TIMESTAMP" property="suspendTime"/>
+        <result column="ExamStatus"  jdbcType="INTEGER" property="examStatus"/>
+    </resultMap>
+
+    <resultMap id="ValidAnswerMap" type="cn.tycad.oa.exam.model.bo.UserOptionBo">
+        <result column="QuestionId" jdbcType="CHAR" property="questionId"/>
+        <result column="AnswerValue" jdbcType="CHAR" property="optionText"/>
+        <result column="QuestionType" jdbcType="INTEGER" property="questionType"/>
+        <result column="QuestionScore" jdbcType="INTEGER" property="questionScore"/>
+        <collection property="optionIds" ofType="String" javaType="list">
+            <result column="OptionId"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbUserExam">
+        insert into Tb_User_Exams(
+        <if test="userId !=null">
+            UserId,
+        </if>
+        <if test="score !=null">
+            Score,
+        </if>
+        <if test="surplus !=null">
+            Surplus,
+        </if>
+        <if test="examStatus !=null">
+            ExamStatus,
+        </if>
+        <if test="finishExamTime !=null">
+            FinishExamTime,
+        </if>
+        <if test="startExamTime !=null">
+            StartExamTime,
+        </if>
+        <if test="markTime !=null">
+            MarkTime,
+        </if>
+        <if test="suspendTime !=null">
+            SuspendTime,
+        </if>
+        <if test="examId !=null">
+            ExamId
+        </if>)
+        values(
+        <if test="userId !=null">
+            #{userId},
+        </if>
+        <if test="score !=null">
+            #{score},
+        </if>
+        <if test="surplus !=null">
+            #{surplus},
+        </if>
+        <if test="examStatus !=null">
+            #{examStatus},
+        </if>
+        <if test="finishExamTime !=null">
+            #{finishExamTime},
+        </if>
+        <if test="startExamTime !=null">
+            #{startExamTime},
+        </if>
+        <if test="markTime !=null">
+            #{markTime},
+        </if>
+        <if test="suspendTime !=null">
+            #{suspendTime},
+        </if>
+        <if test="examId !=null">
+            #{examId}
+        </if>)
+    </insert>
+
+    <insert id="commitAnswer">
+        <foreach collection="answers" item="answer" separator=";">
+            insert into Tb_User_Answers (
+              UserId, OptionId, AnswerValue, QuestionId
+               <if test="answer.userScore != null">
+                   ,UserScore
+               </if>
+            )
+            values
+            (#{userId}, #{answer.optionId},#{answer.answerValue},#{answer.questionId}
+            <if test="answer.userScore != null">
+                ,#{answer.userScore}
+            </if>)
+        </foreach>
+        ;update Tb_User_Exams set FinishExamTime=#{commitTime}, ExamStatus=1 where ExamId=#{examId} and UserId=#{userId}
+    </insert>
+
+    <select id="selectByExamIdAndUserId" resultMap="BaseResultMap">
+        select * from Tb_User_Exams where ExamId = #{examId} and UserId=#{userId}
+    </select>
+
+    <select id="findByUserId" resultType="cn.tycad.oa.exam.model.entity.TbUserExam">
+        select * from Tb_User_Exams where UserId = #{userId}
+    </select>
+
+    <select id="findByUserIdAndExamId" resultType="cn.tycad.oa.exam.model.entity.TbUserExam">
+        select * from Tb_User_Exams where UserId = #{userId} and ExamId = #{examId} LIMIT 0,1
+    </select>
+
+    <select id="getAllValidAnswers" resultMap="ValidAnswerMap">
+        SELECT B.QuestionId
+        , B.QuestionScore
+        , B.QuestionType
+        , C.OptionId
+        , C.AnswerValue
+        FROM Tb_Exams AS A
+        LEFT JOIN Tb_Questions AS B
+            ON B.ExamId=A.ExamId
+        LEFT JOIN Tb_Valid_Answers AS C
+            ON C.QuestionId=B.QuestionId
+        WHERE A.ExamId=#{examId}
+    </select>
+
+    <select id="checkDone" resultType="INTEGER">
+        select count(1) from Tb_User_Exams where UserId=#{userId} and ExamId=#{examId} and ExamStatus=1
+    </select>
+
+    <update id="updateScore">
+        update Tb_User_Exams
+        set Score = #{score},MarkTime = NOW()
+        where ExamId = #{examId} and UserId = #{userId}
+    </update>
+    <select id="findIsScore" resultType="java.lang.Integer">
+        select count(*) from Tb_User_Exams
+        where ExamId = #{examId} and UserId = #{userId} and Score is null
+    </select>
+    <select id="findIsFinish" resultType="java.lang.Integer">
+        select count(*) from Tb_User_Exams
+        where ExamId = #{examId} and UserId = #{userId} and FinishExamTime is not null
+    </select>
+
+    <update id="updateScoreByOvertime">
+        UPDATE Tb_User_Exams
+        SET Score = 0,
+        ExamStatus = 1,
+        MarkTime = #{nowDate}
+        WHERE
+        Score IS NULL
+        AND FinishExamTime IS NULL
+        AND StartExamTime IS NULL
+        AND ExamId IN (
+        SELECT
+        ExamId
+        FROM
+        (
+        SELECT
+        te.ExamId
+        FROM
+        Tb_User_Exams AS tue
+        INNER JOIN Tb_Exams AS te ON tue.ExamId = te.ExamId
+        WHERE
+        te.DeadLine <![CDATA[<]]> #{nowDate}
+        AND tue.Score IS NULL
+        AND tue.FinishExamTime IS NULL
+        AND tue.StartExamTime IS NULL
+        ) AS B
+        );
+        UPDATE Tb_User_Exams
+        SET Score = 0,
+            ExamStatus = 1,
+            MarkTime = #{nowDate}
+        WHERE
+            Score IS NULL
+            AND FinishExamTime IS NULL
+            AND ExamId IN (
+            select ExamId from (
+                SELECT
+                te.ExamId,
+                DATE_ADD(DeadLine,INTERVAL te.Duration MINUTE) AS Deadline
+                FROM
+                Tb_User_Exams AS tue
+                INNER JOIN Tb_Exams AS te ON tue.ExamId = te.ExamId
+                WHERE
+                tue.Score IS NULL
+                AND tue.FinishExamTime IS NULL) as A
+            where Deadline <![CDATA[<]]> #{nowDate}
+            )
+    </update>
+
+    <delete id="deleteByExamId">
+        delete from Tb_User_Exams where ExamId = #{examId} and FinishExamTime is NULL
+    </delete>
+
+    <update id="updateStartExamTime">
+        UPDATE Tb_User_Exams set StartExamTime = #{startExamTime}
+        where userId = #{userId} and examId =#{examId} and StartExamTime is null
+    </update>
+    <update id="updateSuspendTime">
+        UPDATE Tb_User_Exams set SuspendTime = #{date}
+        where userId = #{userId} and examId =#{examId} and SuspendTime is null
+    </update>
+    <update id="updateSurplus">
+        UPDATE Tb_User_Exams set Surplus = #{surplus}
+        where userId = #{userId} and examId =#{examId}
+    </update>
+
+    <select id="findUserIdsByExamId" resultType="java.lang.String">
+        select UserId from Tb_User_Exams where ExamId = #{examId}
+    </select>
+</mapper>

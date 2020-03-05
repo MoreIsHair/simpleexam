@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbQuestionMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbQuestion">
+        <id column="QuestionId" jdbcType="CHAR" property="questionId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="QuestionTitle" jdbcType="CHAR" property="questionTitle"/>
+        <result column="QuestionText" jdbcType="CHAR" property="questionText"/>
+        <result column="OrderNum" jdbcType="INTEGER" property="orderNum"/>
+        <result column="QuestionScore"  jdbcType="FLOAT" property="questionScore"/>
+        <result column="QuestionType" jdbcType="INTEGER" property="questionType"/>
+    </resultMap>
+<!--查询选择题问题、选项-->
+    <resultMap id="OptionQuestionAndOptionMap" type="cn.tycad.oa.exam.model.bo.OptionQuestionAndOptionBo">
+        <id column="QuestionId" jdbcType="CHAR" property="questionId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="QuestionTitle" jdbcType="CHAR" property="questionTitle"/>
+        <result column="QuestionText" jdbcType="CHAR" property="questionText"/>
+        <result column="OrderNum" jdbcType="INTEGER" property="orderNum"/>
+        <result column="QuestionScore"  jdbcType="FLOAT" property="questionScore"/>
+        <result column="QuestionType" jdbcType="INTEGER" property="questionType"/>
+        <collection property="tbOptions" ofType="cn.tycad.oa.exam.model.entity.TbOption">
+            <id column="OptionId" jdbcType="CHAR" property="optionId"/>
+            <result column="OptionText"  jdbcType="CHAR" property="optionText"/>
+            <result column="ToOrderNum"  jdbcType="INTEGER" property="orderNum"/>
+        </collection>
+        <collection property="validAnswers" ofType="cn.tycad.oa.exam.model.entity.TbOption">
+            <id column="ValidOption" jdbcType="CHAR" property="optionId"/>
+            <result column="ValidOptionOrder"  jdbcType="INTEGER" property="orderNum"/>
+        </collection>
+    </resultMap>
+<!--查询选择题问题、选项、回答（可能是多选）-->
+    <resultMap id="OptionQuestionAndOptionValueMap" type="cn.tycad.oa.exam.model.bo.OptionQuestionAndOptionBo">
+        <id column="QuestionId" jdbcType="CHAR" property="questionId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="QuestionTitle" jdbcType="CHAR" property="questionTitle"/>
+        <result column="QuestionText" jdbcType="CHAR" property="questionText"/>
+        <result column="OrderNum" jdbcType="INTEGER" property="orderNum"/>
+        <result column="QuestionScore"  jdbcType="FLOAT" property="questionScore"/>
+        <result column="QuestionType" jdbcType="INTEGER" property="questionType"/>
+        <!--所有选项-->
+        <collection property="tbOptions" ofType="cn.tycad.oa.exam.model.entity.TbOption">
+            <id column="OptionId" jdbcType="CHAR" property="optionId"/>
+            <result column="OptionText"  jdbcType="CHAR" property="optionText"/>
+            <result column="ToOrderNum"  jdbcType="INTEGER" property="orderNum"/>
+        </collection>
+        <!--选择题的所有回答-->
+        <collection property="userAnswers" ofType="cn.tycad.oa.exam.model.entity.TbUserAnswer">
+            <result column="OptionId" jdbcType="CHAR" property="optionId"/>
+            <result column="AnswerValue"  jdbcType="CHAR" property="answerValue"/>
+            <result column="UserId"  jdbcType="CHAR" property="userId"/>
+            <result column="QuestionId"  jdbcType="CHAR" property="questionId"/>
+        </collection>
+    </resultMap>
+<!--查询非选择题的所有问题以及回答-->
+    <resultMap id="QuestionAndAnswerValueMap" type="cn.tycad.oa.exam.model.bo.UserQuestionAndAnswerValueBo">
+        <id column="QuestionId" jdbcType="CHAR" property="questionId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="QuestionTitle" jdbcType="CHAR" property="questionTitle"/>
+        <result column="QuestionScore"  jdbcType="FLOAT" property="questionScore"/>
+        <result column="UserScore"  jdbcType="FLOAT" property="userScore"/>
+        <result column="QuestionText" jdbcType="CHAR" property="questionText"/>
+        <result column="OrderNum" jdbcType="INTEGER" property="orderNum"/>
+        <result column="QuestionType" jdbcType="INTEGER" property="questionType"/>
+        <result column="AnswerValue" jdbcType="CHAR" property="answerValue"/>
+        <result column="ValidValue" jdbcType="CHAR" property="validValue"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbQuestion">
+        insert  into Tb_Questions(
+        <if test="questionId !=null">
+            QuestionId,
+        </if>
+        <if test="questionTitle !=null">
+            QuestionTitle,
+        </if>
+        <if test="questionText !=null">
+            QuestionText,
+        </if>
+        <if test="orderNum !=null">
+            OrderNum,
+        </if>
+        <if test="questionType !=null">
+            QuestionType,
+        </if>
+        <if test="questionScore !=null">
+            QuestionScore,
+        </if>
+        <if test="examId !=null">
+            ExamId
+        </if>)
+        values(
+        <if test="questionId !=null">
+            #{questionId},
+        </if>
+        <if test="questionTitle !=null">
+            #{questionTitle},
+        </if>
+        <if test="questionText !=null">
+            #{questionText},
+        </if>
+        <if test="orderNum !=null">
+            #{orderNum},
+        </if>
+        <if test="questionType !=null">
+            #{questionType},
+        </if>
+        <if test="questionScore !=null">
+            #{questionScore},
+        </if>
+        <if test="examId !=null">
+            #{examId}
+        </if>)
+    </insert>
+
+    <update id="updateTitleOrTextByTbQuestion" parameterType="cn.tycad.oa.exam.model.entity.TbQuestion">
+        update Tb_Questions
+        <set>
+            <if test="questionTitle !=null and questionTitle !=''"> QuestionTitle=#{questionTitle},</if>
+            <if test="questionText !=null and questionText !=''"> QuestionText=#{questionText},</if>
+            <if test="orderNum !=null"> OrderNum=#{orderNum},</if>
+            <if test="questionScore !=null"> QuestionScore=#{questionScore},</if>
+            <if test="questionType !=null"> OrderNum=#{questionType}</if>
+        </set>
+        <where>
+            ExamId=#{examId} and QuestionId=#{questionId}
+        </where>
+    </update>
+    <select id="findByExamId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select QuestionId
+              ,(case when QuestionTitle is null then '' else QuestionTitle end) as QuestionTitle
+              ,(case when QuestionText is null then '' else QuestionText end) as QuestionText
+              ,ExamId
+              ,OrderNum
+              ,QuestionType
+              ,QuestionScore
+        from Tb_Questions
+        where ExamId = #{examId} and QuestionType in (2,1)
+        order by QuestionType asc,OrderNum asc
+    </select>
+
+    <select id="findAllByExamId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from Tb_Questions
+        where ExamId = #{examId}
+        order by QuestionType asc,OrderNum asc
+    </select>
+    <select id="findQuestionAndAnswerValue"  resultMap="QuestionAndAnswerValueMap">
+        select  tq.QuestionId,
+                tq.ExamId,
+                (case when tq.QuestionTitle is null then '' else tq.QuestionTitle end) as QuestionTitle,
+                (case when tq.QuestionText is null then '' else tq.QuestionText end) as QuestionText,
+                tq.OrderNum,
+                tq.QuestionType,
+                tq.QuestionScore,
+                tua.AnswerValue,
+                (case when tua.UserScore is null then 0 else tua.UserScore end) as UserScore,
+                tva.AnswerValue ValidValue
+        from Tb_Questions as tq left outer join Tb_User_Answers tua on tq.QuestionId = tua.QuestionId and tua.UserId =#{userId}
+        left outer join Tb_Valid_Answers as tva on tva.QuestionId = tq.QuestionId
+        where tq.ExamId = #{examId} and tq.QuestionType = #{questionType}
+        order by tq.OrderNum asc
+    </select>
+    <select id="findOptionQuestionByExamIdAndQuestionType"  resultMap="BaseResultMap">
+        select * from Tb_Questions where ExamId = #{examId} and QuestionType= #{questionType}
+    </select>
+    <select id="findHasQuestionByExamIdAndQuestionType" resultType="java.lang.Integer">
+        select count(*) from Tb_Questions where ExamId = #{examId} and QuestionType= #{questionType}
+    </select>
+    <select id="findOptionQuestionAndOption"  resultMap="OptionQuestionAndOptionMap">
+        select tq.QuestionId
+              ,(case when tq.QuestionTitle is null then '' else tq.QuestionTitle end) as QuestionTitle
+              ,(case when tq.QuestionText is null then '' else tq.QuestionText end) as QuestionText
+              ,tq.ExamId
+              ,tq.OrderNum
+              ,tq.QuestionType
+              ,tq.QuestionScore
+             , t.OptionId
+             , t.OptionText
+             , t.OrderNum as ToOrderNum
+             , tva.OptionId AS validOption
+             , (case when tva.OptionId is null
+                then null
+                else t.OrderNum end) as ValidOptionOrder
+        from Tb_Questions as tq
+        inner join Tb_Option as t
+        on tq.QuestionId = t.QuestionId and tq.QuestionType in (0,-1)
+        left join Tb_Valid_Answers as tva
+        on tva.QuestionId=t.QuestionId and tva.OptionId=t.OptionId
+        where tq.ExamId = #{examId}
+        order by tq.OrderNum asc,t.OrderNum asc
+    </select>
+    <delete id="deleteExamId" parameterType="java.lang.String">
+        delete from Tb_Questions where ExamId = #{value}
+    </delete>
+</mapper>

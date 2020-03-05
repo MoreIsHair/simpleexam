@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbInterviewTemplateMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbInterviewTemplate">
+        <id column="InterviewTemplateId" jdbcType="CHAR" property="interviewTemplateId"/>
+        <result column="Name" jdbcType="CHAR" property="name"/>
+        <result column="CreateUsername" jdbcType="CHAR" property="createUsername"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="FollowType" jdbcType="INTEGER" property="followType"/>
+        <result column="Duration" jdbcType="INTEGER" property="duration"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbInterviewTemplate">
+        insert  into tb_interview_template(
+        <if test="interviewTemplateId !=null">
+            InterviewTemplateId,
+        </if>
+        <if test="name !=null">
+            Name,
+        </if>
+        <if test="createUsername !=null">
+            CreateUsername,
+        </if>
+        <if test="description !=null">
+            Description,
+        </if>
+        <if test="createTime !=null">
+            CreateTime,
+        </if>
+        <if test="duration !=null">
+            Duration,
+        </if>)
+        <if test="followType !=null">
+            FollowType
+        </if>
+        values(
+        <if test="interviewTemplateId !=null">
+            #{interviewTemplateId},
+        </if>
+        <if test="name !=null">
+            #{name},
+        </if>
+        <if test="createUsername !=null">
+            #{createUsername},
+        </if>
+        <if test="description !=null">
+            #{description},
+        </if>
+        <if test="createTime !=null">
+            #{createTime},
+        </if>
+        <if test="duration !=null">
+            #{duration},
+        </if>
+        <if test="followType !=null">
+            #{followType}
+        </if>)
+    </insert>
+    <select id="findAllByFollow" resultMap="BaseResultMap">
+        select * from tb_interview_template where FollowType =#{follow} order By CreateTime
+    </select>
+    <select id="findIsExistByTemplateId" resultType="cn.tycad.oa.exam.model.entity.TbInterviewTemplate">
+        select count(*) from tb_interview_template where InterviewTemplateId = #{templateId}
+    </select>
+</mapper>

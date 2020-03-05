@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemUserMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemUser">
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="Username" jdbcType="CHAR" property="username"/>
+        <result column="Name"  jdbcType="CHAR" property="name"/>
+        <result column="CompanyName"  jdbcType="CHAR" property="companyName"/>
+        <result column="DeptId"  jdbcType="CHAR" property="deptId"/>
+        <result column="Password" jdbcType="CHAR" property="password"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="ProFilePicture" jdbcType="CHAR" property="proFilePicture"/>
+        <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="Birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="Gender" jdbcType="CHAR" property="gender"/>
+        <result column="Type" jdbcType="INTEGER" property="type"/>
+    </resultMap>
+
+    <resultMap id="UserRoleMap" type="cn.tycad.oa.exam.model.bo.SystemUserBo">
+        <id column="UserId" jdbcType="CHAR" property="userId"/>
+        <result column="Username" jdbcType="CHAR" property="username"/>
+        <result column="Name"  jdbcType="CHAR" property="name"/>
+        <result column="DeptId"  jdbcType="CHAR" property="deptId"/>
+        <result column="Password" jdbcType="CHAR" property="password"/>
+        <result column="Description" jdbcType="CHAR" property="description"/>
+        <result column="ProFilePicture" jdbcType="CHAR" property="proFilePicture"/>
+        <result column="LastEditTime" jdbcType="TIMESTAMP" property="lastEditTime"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="Birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="Type" jdbcType="INTEGER" property="type"/>
+        <result column="Gender" jdbcType="CHAR" property="gender"/>
+        <result column="Tel" jdbcType="CHAR" property="tel"/>
+        <result column="DeptName" jdbcType="CHAR" property="department"/>
+        <collection property="roles" ofType="cn.tycad.oa.exam.model.entity.SystemRole">
+            <result column="RoleId"  jdbcType="CHAR" property="roleId"/>
+            <result column="RoleName" jdbcType="CHAR" property="roleName"/>
+        </collection>
+    </resultMap>
+
+    <insert id="add" parameterType="cn.tycad.oa.exam.model.entity.SystemUser">
+        insert  into System_Users(
+        <if test="userId !=null">
+            UserId,
+        </if>
+        <if test="username !=null">
+            Username,
+        </if>
+        <if test="name !=null">
+            Name,
+        </if>
+        <if test="deptId !=null">
+            DeptId,
+        </if>
+        <if test="description !=null">
+            Description,
+        </if>
+        <if test="proFilePicture !=null">
+            ProFilePicture,
+        </if>
+        <if test="lastEditTime !=null">
+            LastEditTime,
+        </if>
+        <if test="createTime !=null" >
+            CreateTime,
+        </if>
+        <if test="birthday !=null">
+            Birthday,
+        </if>
+        <if test="gender !=null">
+            Gender,
+        </if>
+        <if test="type !=null">
+            Type,
+        </if>
+        <if test="roleId !=null">
+            RoleId,
+        </if>
+        <if test="password !=null">
+            Password
+        </if>)
+        values(
+        <if test="userId !=null">
+            #{userId},
+        </if>
+        <if test="username !=null">
+            #{username},
+        </if>
+        <if test="name !=null">
+            #{name},
+        </if>
+        <if test="deptId !=null">
+            #{deptId},
+        </if>
+        <if test="description !=null">
+            #{description},
+        </if>
+        <if test="proFilePicture!=null">
+            #{proFilePicture},
+        </if>
+        <if test="lastEditTime !=null">
+            #{lastEditTime},
+        </if>
+        <if test="createTime !=null">
+            #{createTime},
+        </if>
+        <if test="birthday !=null">
+            #{birthday},
+        </if>
+        <if test="gender !=null">
+            #{gender},
+        </if>
+        <if test="type !=null">
+            #{type},
+        </if>
+        <if test="roleId !=null">
+            #{roleId},
+        </if>
+        <if test="password !=null">
+            #{password}
+        </if>)
+    </insert>
+
+    <select id="list" resultMap="UserRoleMap" parameterType="string">
+        SELECT  U.UserId,
+                U.Username,
+                U.Name,
+                U.DeptId,
+                U.Password,
+                U.Description,
+                U.ProfilePicture,
+                U.LastEditTime,
+                U.CreateTime,
+                U.Birthday,
+                U.Gender,
+                U.Tel,
+                D.DeptName,
+                U.Type
+        FROM System_Users AS U
+
+        INNER JOIN System_Departments AS D
+        ON D.DeptId=U.DeptId
+        <where>
+            <if test="username != null and username != ''">
+              and U.Username LIKE '%${username}%'
+            </if>
+            <if test="name != null and name != ''">
+              and U.Name LIKE '%${name}%'
+            </if>
+        </where>
+        ORDER BY LastEditTime DESC
+    </select>
+
+    <select id="getOne" resultMap="UserRoleMap">
+        SELECT U.UserId,
+               U.Username,
+               U.Name,
+               U.DeptId,
+               U.Password,
+               U.Description,
+               U.ProFilePicture,
+               U.LastEditTime,
+               U.CreateTime,
+               U.Birthday,
+               U.Gender,
+               U.Type,
+               R.RoleName
+        FROM System_Users AS U
+        INNER JOIN System_User_Role AS UR
+            ON UR.UserId = U.UserId
+        INNER JOIN System_Roles AS R
+            ON R.RoleId = UR.RoleId
+        WHERE U.UserId= #{id} LIMIT 0,1
+
+    </select>
+
+    <select id="findAllAuthorityNameByUserId" resultType="java.lang.String">
+        select sa.Name
+        from System_Users as su inner join System_User_Role as sur on su.UserId = sur.UserId
+        inner join System_Roles as sr on sur.RoleId = sr.RoleId
+        inner join System_Role_Authority as sra on sr.RoleId = sra.RoleId
+        inner join System_Authority as sa on sra.AuthId = sa.AuthId
+        where su.UserId = #{userId}
+    </select>
+
+    <select id="findByUserName" resultMap="UserRoleMap">
+        SELECT U.UserId,
+               U.Username,
+               U.Name,
+               U.DeptId,
+               U.Password,
+               U.Description,
+               U.ProFilePicture,
+               U.LastEditTime,
+               U.CreateTime,
+               U.Birthday,
+               U.Gender,
+               U.Tel,
+               U.Type,
+               R.RoleId,
+               R.RoleName
+        FROM System_Users AS U
+        INNER JOIN System_User_Role AS UR
+            ON UR.UserId = U.UserId
+        INNER JOIN System_Roles AS R
+            ON R.RoleId = UR.RoleId
+        where UserName=#{userName}
+    </select>
+
+    <select id="findByUserNameAndRoleType" resultType="cn.tycad.oa.exam.model.entity.SystemUser">
+        select su.* from System_Users as su
+        inner join System_User_Role as sur on su.UserId = sur.UserId
+        inner join System_Roles as sr on sur.RoleId = sr.RoleId
+        where su.UserName=#{userName} and sr.RoleType = #{roleType} limit 0,1
+    </select>
+
+    <select id="getByRoleId" resultType="cn.tycad.oa.exam.model.entity.SystemUser">
+        select su.* from System_Users as su
+        inner join System_User_Role as sur on su.UserId = sur.UserId
+        inner join System_Roles as sr on sur.RoleId = sr.RoleId
+        where sr.RoleId=#{roleId}
+    </select>
+
+    <insert id="bulkInsert">
+        CREATE TEMPORARY TABLE TempUser
+        (
+            UserId varchar(50),
+            Username VARCHAR(50),
+            Name VARCHAR(50),
+            DeptId VARCHAR(50),
+            Password VARCHAR(50),
+            Description VARCHAR(500),
+            CreateTime DATE,
+            LastEditTime DATE,
+            Gender VARCHAR(4),
+            ProfilePicture VARCHAR(300),
+            Birthday DATE,
+            Type int(2),
+            RoleID VARCHAR(50),
+            GroupId VARCHAR(50),
+            Tel VARCHAR(2)
+        );
+
+        INSERT INTO TempUser
+        (UserId,
+         Username,
+         Name,
+         DeptId,
+         Password,
+         Type,
+         Description,
+         CreateTime,
+         LastEditTime,
+         Gender,
+         ProfilePicture,
+         Birthday,
+         RoleID,
+         GroupId,
+         Tel)
+        VALUES
+        <foreach collection="users" item="user" separator=",">
+            (
+            #{user.userId},
+            #{user.username},
+            #{user.name},
+            #{user.deptId},
+            #{user.password},
+            #{user.type},
+            #{user.description},
+            #{user.createTime},
+            #{user.lastEditTime},
+            #{user.gender},
+            #{user.proFilePicture},
+            #{user.birthday},
+            '',
+            <choose>
+                <when test="user.groupId != null and user.groupId != ''">
+                    #{user.groupId},
+                </when>
+                <otherwise>
+                    null,
+                </otherwise>
+            </choose>
+            ''
+            )
+        </foreach>
+        ;
+        /*INSERT INTO System_Users
+        SELECT * FROM TempUser
+        WHERE NOT EXISTS (SELECT UserId FROM System_Users WHERE TempUser.Username = System_Users.Username);*/
+        INSERT INTO System_Users
+        SELECT * FROM TempUser WHERE NOT EXISTS (SELECT Username FROM System_Users);
+
+        INSERT INTO System_User_Role
+        ( UserId, RoleId )
+        VALUES
+        <foreach collection="users" item="user" separator=",">
+            <foreach collection="user.roles" item="role" >
+                (
+                #{user.userId},
+                #{role.roleId}
+                )
+            </foreach>
+        </foreach>
+        ;
+
+        DROP Table TempUser;
+    </insert>
+
+    <select id="findIsRoleByUserIdAndRoleType" resultType="java.lang.Integer">
+        select count(*) from System_Users as su
+        inner join System_User_Role as sur on su.UserId = sur.UserId
+        inner join System_Roles as sr on sur.RoleId = sr.RoleId
+        where su.UserId = #{userId} and sr.RoleType = #{roleType}
+    </select>
+
+    <update id="updateUserPassword" parameterType="string">
+      UPDATE System_Users SET Password=#{newPass} WHERE UserId=#{userId}
+    </update>
+
+    <update id="batchUpdatePassword" parameterType="map">
+
+        <foreach collection="users" item="value" index="key" separator=";">
+            update System_Users SET Password = #{value} where Username = #{key}
+        </foreach>
+    </update>
+</mapper>

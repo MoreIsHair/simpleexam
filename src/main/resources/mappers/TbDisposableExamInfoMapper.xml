@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbDisposableExamInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbDisposableExamInfo">
+        <result column="DisposableId" jdbcType="CHAR" property="disposableId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="examId"/>
+        <result column="ExamId"  jdbcType="CHAR" property="templateId"/>
+        <result column="Score"  jdbcType="FLOAT" property="score"/>
+        <result column="Surplus"  jdbcType="DOUBLE" property="surplus"/>
+        <result column="FinishExamTime" jdbcType="TIMESTAMP" property="finishExamTime"/>
+        <result column="StartExamTime" jdbcType="TIMESTAMP" property="startExamTime"/>
+        <result column="DisposableCompany" jdbcType="CHAR" property="disposableCompany"/>
+        <result column="DisposableTel" jdbcType="CHAR" property="disposableTel"/>
+        <result column="SuspendTime" jdbcType="TIMESTAMP" property="suspendTime"/>
+        <result column="ExamStatus"  jdbcType="INTEGER" property="examStatus"/>
+        <result column="DisposableUsername"  jdbcType="CHAR" property="disposableUsername"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbDisposableExamInfo">
+        insert into tb_disposable_exam_info(
+        <if test="userId !=null">
+            DisposableId,
+        </if>
+        <if test="userId !=null">
+            DisposableUsername,
+        </if>
+        <if test="userId !=null">
+            DisposableTel,
+        </if>
+        <if test="score !=null">
+            Score,
+        </if>
+        <if test="surplus !=null">
+            Surplus,
+        </if>
+        <if test="examStatus !=null">
+            ExamStatus,
+        </if>
+        <if test="finishExamTime !=null">
+            FinishExamTime,
+        </if>
+        <if test="startExamTime !=null">
+            StartExamTime,
+        </if>
+        <if test="markTime !=null">
+            DisposableCompany,
+        </if>
+        <if test="suspendTime !=null">
+            SuspendTime,
+        </if>
+        <if test="templateId !=null">
+            TemplateId,
+        </if>
+        <if test="examId !=null">
+            ExamId
+        </if>)
+        values(
+        <if test="disposableId !=null">
+            #{disposableId},
+        </if>
+        <if test="disposableUsername !=null">
+            #{disposableUsername},
+        </if>
+        <if test="disposableTel !=null">
+            #{disposableTel},
+        </if>
+        <if test="score !=null">
+            #{score},
+        </if>
+        <if test="surplus !=null">
+            #{surplus},
+        </if>
+        <if test="examStatus !=null">
+            #{examStatus},
+        </if>
+        <if test="finishExamTime !=null">
+            #{finishExamTime},
+        </if>
+        <if test="startExamTime !=null">
+            #{startExamTime},
+        </if>
+        <if test="disposableCompany !=null">
+            #{disposableCompany},
+        </if>
+        <if test="suspendTime !=null">
+            #{suspendTime},
+        </if>
+        <if test="templateId !=null">
+            #{templateId},
+        </if>
+        <if test="examId !=null">
+            #{examId}
+        </if>)
+    </insert>
+    <update id="updateDisposableScoreByExamId">
+        update tb_disposable_exam_info set Score =#{sum},FinishExamTime = now(), ExamStatus =1 where ExamId=#{examId} and DisposableUserName =#{disposableUserName}
+    </update>
+
+    <update id="updateDisposableScoreByTemplateId">
+        update tb_disposable_exam_info set Score =#{sum},FinishExamTime = now(), ExamStatus =1 where TemplateId=#{templateId} and DisposableUserName =#{disposableUserName}
+    </update>
+
+    <select id="findByDisUserName" resultMap="BaseResultMap">
+        select * from tb_disposable_exam_info where disposableUsername =#{disposableUsername}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from tb_disposable_exam_info order by StartExamTime asc
+    </select>
+
+</mapper>

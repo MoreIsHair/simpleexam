@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.TbInterviewTemplateQuestionMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.TbInterviewTemplateQuestion">
+        <id column="InterviewTemplateId" jdbcType="CHAR" property="interviewTemplateId"/>
+        <id column="InterviewQuestionId" jdbcType="CHAR" property="interviewQuestionId"/>
+        <result column="OrderNum"  jdbcType="INTEGER" property="orderNum"/>
+    </resultMap>
+    <resultMap id="AllQuestionByTemplateId" type="cn.tycad.oa.exam.model.bo.InterviewQuestionAndOptionBo">
+        <id column="InterviewQuestionId" jdbcType="CHAR" property="interviewQuestionId"/>
+        <result column="interviewQuestionTitle" jdbcType="CHAR" property="interviewQuestionTitle"/>
+        <result column="interviewQuestionText" jdbcType="CHAR" property="interviewQuestionText"/>
+        <result column="InterviewQuestionType" jdbcType="INTEGER" property="interviewQuestionType"/>
+        <result column="InterviewQuestionFollow" jdbcType="INTEGER" property="interviewQuestionFollow"/>
+        <result column="InterviewQuestionScore"  jdbcType="DOUBLE" property="interviewQuestionScore"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <collection property="tbOptions" ofType="cn.tycad.oa.exam.model.entity.TbOption">
+            <id column="OptionId" jdbcType="CHAR" property="optionId"/>
+            <result column="OptionText"  jdbcType="CHAR" property="optionText"/>
+            <result column="OrderNum"  jdbcType="INTEGER" property="orderNum"/>
+        </collection>
+        <collection property="validAnswers" ofType="cn.tycad.oa.exam.model.entity.TbOption">
+            <id column="ValidOption" jdbcType="CHAR" property="optionId"/>
+            <result column="ValidOptionOrder"  jdbcType="INTEGER" property="orderNum"/>
+        </collection>
+    </resultMap>
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.TbInterviewTemplateQuestion">
+        insert  into tb_interview_template_question(
+        <if test="interviewTemplateId !=null">
+            InterviewTemplateId,
+        </if>
+        <if test="orderNum !=null">
+            OrderNum,
+        </if>
+        <if test="interviewQuestionId !=null">
+            InterviewQuestionId
+        </if>)
+        values(
+        <if test="interviewTemplateId !=null">
+            #{interviewTemplateId},
+        </if>
+        <if test="orderNum !=null">
+            #{orderNum},
+        </if>
+        <if test="interviewQuestionId !=null">
+            #{interviewQuestionId}
+        </if>)
+    </insert>
+    <select id="findAllOptionQuestionByTemplateId" resultMap="AllQuestionByTemplateId">
+        select titq.*,tiq.*,top.OptionId,top.OptionText,top.OrderNum ,tva.AnswerValue tva.OptionId as ValidOption
+        from tb_interview_template_question as titq
+        inner join tb_interview_question as tiq on titq.InterviewTemplateId = tiq.InterviewTemplateId
+        left outer join tb_option as top on tiq.InterviewQuestionId = top.QuestionId
+        left outer join tb_valid_answers tva on tva.QuestionId = tiq.InterviewQuestionId
+        where titp.InterviewTemplateId =#{templateId} order by titq.OrderNum asc. tiq.InterviewQuestionType asc,tiq.CreateTime asc,top.OrderNum asc
+    </select>
+</mapper>

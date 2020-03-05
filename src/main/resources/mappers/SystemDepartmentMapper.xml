@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tycad.oa.exam.repository.SystemDepartmentMapper">
+    <resultMap id="BaseResultMap" type="cn.tycad.oa.exam.model.entity.SystemDepartment">
+        <id column="DeptId" jdbcType="CHAR" property="deptId"/>
+        <result column="DeptName"  jdbcType="CHAR" property="deptName"/>
+        <result column="DeptDescription" jdbcType="CHAR" property="deptDescription"/>
+    </resultMap>
+    <insert id="insert" parameterType="cn.tycad.oa.exam.model.entity.SystemDepartment">
+        insert  into System_Departments(
+        <if test="deptId !=null">
+            DeptId,
+        </if>
+        <if test="deptName !=null">
+            DeptName,
+        </if>
+        <if test="deptDescription !=null">
+            DeptDescription
+        </if>)
+        values(
+        <if test="deptId !=null">
+            #{deptId},
+        </if>
+        <if test="deptName !=null">
+            #{deptName},
+        </if>
+        <if test="deptDescription !=null">
+            #{deptDescription}
+        </if>)
+    </insert>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT DeptId
+             , DeptName
+             , Description
+        FROM   System_Departments
+    </select>
+
+    <update id="update">
+        UPDATE System_Departments
+        SET DeptName = #{deptName}, DeptDescription=#{deptDescription}
+        WHERE DeptId=#{deptId};
+    </update>
+</mapper>
